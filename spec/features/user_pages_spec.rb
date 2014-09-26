@@ -1,4 +1,5 @@
 require 'rails_helper'
+
 RSpec.describe "UserPages", :type => :request do
   describe "GET /user_pages" do
     it "Sign Up page exists" do
@@ -10,6 +11,8 @@ end
 
 describe "User pages" do
 	let(:base_title) { "USMA CS450" }
+	subject {page}
+
  describe "Signup page" do
 	before {visit signup_path}	
 	let(:submit) { "Create my account" }
@@ -30,6 +33,14 @@ describe "User pages" do
 
 	it "should create a user" do
 	  expect { click_button submit }.to change(User, :count).by(1)
+	end
+
+	describe "after saving the user" do
+	  before { click_button submit }
+	  let(:user) { User.find_by(email: 'user@example.com') }
+	  
+	  it { should have_link('Sign out') }
+	  it { should have_title(user.name) }
 	end
 
     it "should have the h1 'USMA CS450 Sample App'" do
